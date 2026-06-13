@@ -1,0 +1,16 @@
+*.got
+*.done
+*.BAD
+bin/
+lib/
+share/
+include/
+libexec/
+usr/
+inputs/
+lwtools/
+turbos/
+tfr9/
+build-*
+go.work
+go.work.sum

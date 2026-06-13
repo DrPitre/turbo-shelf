@@ -20,7 +20,9 @@ turbos.done: turbos.got tfr9.got lwtools.done
 	date > $@
 
 hyper9.done: hyper9.got
-	xcodebuild -project hyper9/Hyper9.xcodeproj -scheme hyper9-cmd -configuration Release build
+	mkdir -p bin
+	xcodebuild -project hyper9/Hyper9.xcodeproj -scheme hyper9-cmd -configuration Release \
+		CONFIGURATION_BUILD_DIR=$(SHELF)/bin build
 	date > $@
 
 lwtools.done: lwtools.got

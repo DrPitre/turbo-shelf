@@ -5,7 +5,13 @@
 
 include conf.mk
 
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Darwin)
 all: turbos.done hyper9.done
+else
+all: turbos.done
+endif
 
 ############################################################################
 

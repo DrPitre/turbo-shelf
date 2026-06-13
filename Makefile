@@ -5,13 +5,7 @@
 
 include conf.mk
 
-UNAME := $(shell uname)
-
-ifeq ($(UNAME), Darwin)
 all: turbos.done hyper9.done
-else
-all: turbos.done
-endif
 
 ############################################################################
 
@@ -21,8 +15,8 @@ turbos.done: turbos.got tfr9.got lwtools.done
 
 hyper9.done: hyper9.got
 	mkdir -p bin
-	xcodebuild -project hyper9/Hyper9.xcodeproj -scheme hyper9-cmd -configuration Release \
-		CONFIGURATION_BUILD_DIR=$(SHELF)/bin build
+	cd hyper9 && swift build -c release --product hyper9-cmd
+	cp hyper9/.build/release/hyper9-cmd bin/
 	date > $@
 
 lwtools.done: lwtools.got

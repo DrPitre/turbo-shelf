@@ -1,4 +1,4 @@
-# Makefile for turbo-bench
+# Makefile for turbo-shelf
 #
 # Builds the Turbo9 simulator and its toolchain dependencies.
 # Usage: make [ANON=1]

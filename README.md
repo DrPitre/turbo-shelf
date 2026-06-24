@@ -1,4 +1,4 @@
-# turbo-bench
+# turbo-shelf
 
 A focused build shelf for the Turbo9 processor ecosystem.
 
@@ -13,7 +13,7 @@ Clones and builds:
 
 ```sh
 git clone <this repo>
-cd turbo-bench
+cd turbo-shelf
 make ANON=1
 ```
 
@@ -22,7 +22,7 @@ Remove `ANON=1` if you have a GitHub SSH key in your agent.
 ## Setting Your PATH
 
 After building, add `bin/` to your shell's PATH so the tools are available anywhere.
-Run this once from inside the turbo-bench directory:
+Run this once from inside the turbo-shelf directory:
 
 ```sh
 # macOS (zsh)

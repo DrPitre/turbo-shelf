@@ -1,4 +1,4 @@
-# This is conf.mk for turbo-bench.
+# This is conf.mk for turbo-shelf.
 
 S:=$(shell pwd)
 P:=$(shell echo $$PATH)

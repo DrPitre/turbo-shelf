@@ -1,6 +1,5 @@
 *.got
 *.done
-*.clang-patched
 *.BAD
 bin/
 lib/

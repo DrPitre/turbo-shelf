@@ -19,12 +19,12 @@ hyper9.done: hyper9.got
 	cp hyper9/.build/release/hyper9-cmd bin/
 	date > $@
 
-freertos-turbo9.done: freertos-turbo9.clang-patched hyper9.done lwtools.done
+freertos-turbo9.done: freertos-turbo9.got hyper9.done lwtools.done
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/Turbo9_CLANG clean
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/Turbo9_CLANG freertos_baseline.img
 	date > $@
 
-freertos-coco-clang.done: freertos-turbo9.clang-patched lwtools.done
+freertos-coco-clang.done: freertos-turbo9.got lwtools.done
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/CoCo_CLANG clean
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/CoCo_CLANG freertos.dsk
 	date > $@
@@ -56,10 +56,6 @@ freertos-turbo9.got:
 	set -x; test -d FreeRTOS_Turbo9 || git clone $(TURBOBENCH_FREERTOS_TURBO9_REPO) FreeRTOS_Turbo9
 	date > $@
 
-freertos-turbo9.clang-patched: freertos-turbo9.got patches/freertos-clang.patch
-	test -d FreeRTOS_Turbo9/FreeRTOS/Demo/Turbo9_CLANG || git -C FreeRTOS_Turbo9 apply --ignore-whitespace "$(SHELF)/patches/freertos-clang.patch"
-	date > $@
-
 pico-sdk.got:
 	B=$(basename $@); set -x; test -d $$B || git clone --recurse-submodules $(TURBOBENCH_PICO_SDK_REPO) $$B
 	date > $@
@@ -74,7 +70,7 @@ inputs/$(TURBOBENCH_LWTOOLS_TARBALL):
 ############################################################################
 
 clean:
-	rm -rf *.got *.done freertos-turbo9.clang-patched
+	rm -rf *.got *.done
 	rm -rf bin share lib libexec usr include
 	rm -rf lwtools turbos tfr9 hyper9 FreeRTOS_Turbo9 pico-sdk
 

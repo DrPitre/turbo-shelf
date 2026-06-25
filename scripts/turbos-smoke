@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Smoke-test a TurbOS image under hyper9-cmd."""
+
+import argparse
+import os
+import subprocess
+import sys
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seconds", type=float, default=1.0)
+    parser.add_argument("--expect-output")
+    parser.add_argument("--input")
+    parser.add_argument("--input-after-output")
+    parser.add_argument("hyper9_cmd")
+    parser.add_argument("image")
+    args = parser.parse_args()
+
+    if not os.path.isfile(args.hyper9_cmd):
+        print(f"missing hyper9 command: {args.hyper9_cmd}", file=sys.stderr)
+        return 2
+    if not os.path.isfile(args.image):
+        print(f"missing TurbOS image: {args.image}", file=sys.stderr)
+        return 2
+    size = os.path.getsize(args.image)
+    if size != 65536:
+        print(f"expected 65536-byte image, got {size}: {args.image}", file=sys.stderr)
+        return 2
+
+    command = [args.hyper9_cmd, "--seconds", str(args.seconds)]
+    if args.expect_output:
+        command.extend(["--expect-output", args.expect_output])
+    if args.input:
+        command.extend(["--input", args.input])
+    if args.input_after_output:
+        command.extend(["--input-after-output", args.input_after_output])
+    command.append(args.image)
+
+    proc = subprocess.Popen(
+        command,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        stdout, stderr = proc.communicate(timeout=args.seconds + 2)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        stdout, stderr = proc.communicate()
+        print("hyper9-cmd did not stop before timeout", file=sys.stderr)
+        return 1
+
+    if proc.returncode != 0:
+        print(f"hyper9-cmd exited with status {proc.returncode}", file=sys.stderr)
+        if stdout:
+            print(stdout, file=sys.stderr, end="")
+        if stderr:
+            print(stderr, file=sys.stderr, end="")
+        return 1
+
+    if args.expect_output and args.expect_output not in stdout:
+        print(f"expected output not seen: {args.expect_output}", file=sys.stderr)
+        if stdout:
+            print(stdout, file=sys.stderr, end="")
+        if stderr:
+            print(stderr, file=sys.stderr, end="")
+        return 1
+
+    if args.expect_output:
+        if args.input:
+            print(f"ok: {args.image} accepted input and printed {args.expect_output!r}")
+        else:
+            print(f"ok: {args.image} printed {args.expect_output!r}")
+    else:
+        print(f"ok: {args.image} ran under hyper9-cmd for {args.seconds:.1f}s")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

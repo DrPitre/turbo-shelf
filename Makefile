@@ -7,13 +7,35 @@ include conf.mk
 
 all: turbos.done hyper9.done freertos-turbo9.done
 
+TURBOS_IMAGE ?= turbos/ports/turbo9sim/turbos_full.img
+TURBOS_SMOKE_IMAGE ?= turbos/ports/turbo9sim/turbos_smoke.img
+TURBOS_SMOKE_SECONDS ?= 1.0
+
 ############################################################################
 
 turbos.done: turbos.got tfr9.got lwtools.done
 	make -C turbos/ports/turbo9sim TURBOSDIR=$(SHELF)/turbos
 	date > $@
 
-hyper9.done: hyper9.got
+turbos-smoke-image.done: turbos.got tfr9.got lwtools.done turbos/ports/turbo9sim/go_smoke.asm
+	make -C turbos/ports/turbo9sim TURBOSDIR=$(SHELF)/turbos turbos_smoke.img
+	date > $@
+
+turbos-run: turbos.done hyper9.done
+	./bin/hyper9-cmd $(TURBOS_IMAGE)
+
+turbos-smoke: turbos-smoke-image.done hyper9.done
+	./scripts/turbos-smoke --seconds $(TURBOS_SMOKE_SECONDS) --expect-output "TurbOS OK" ./bin/hyper9-cmd $(TURBOS_SMOKE_IMAGE)
+
+turbos-full-smoke: turbos.done hyper9.done
+	./scripts/turbos-smoke --seconds 3.0 --input "mdir\\r" --input-after-output "TOS:" --expect-output "Module directory" ./bin/hyper9-cmd turbos/ports/turbo9sim/turbos_full.img
+
+turbos-smoke-all: turbos.done hyper9.done
+	./scripts/turbos-smoke --seconds $(TURBOS_SMOKE_SECONDS) ./bin/hyper9-cmd turbos/ports/turbo9sim/turbos_min.img
+	./scripts/turbos-smoke --seconds $(TURBOS_SMOKE_SECONDS) ./bin/hyper9-cmd turbos/ports/turbo9sim/turbos_uio.img
+	./scripts/turbos-smoke --seconds $(TURBOS_SMOKE_SECONDS) ./bin/hyper9-cmd turbos/ports/turbo9sim/turbos_full.img
+
+hyper9.done: hyper9.got hyper9/hyper9-cmd/main.swift
 	mkdir -p bin
 	cd hyper9 && swift build -c release --product hyper9-cmd
 	cp hyper9/.build/release/hyper9-cmd bin/

@@ -57,6 +57,34 @@ Build the FreeRTOS CoCo CLANG demo explicitly with:
 make freertos-coco-clang.done
 ```
 
+Run the TurbOS Turbo9 simulator image with Hyper9:
+
+```sh
+make turbos-run
+```
+
+By default this runs `turbos/ports/turbo9sim/turbos_full.img`. Override the image
+with `TURBOS_IMAGE=...`.
+
+Run a non-interactive smoke test that builds a dedicated TurbOS image, starts
+`hyper9-cmd`, and verifies it prints `TurbOS OK`:
+
+```sh
+make turbos-smoke
+```
+
+Use `make turbos-smoke-all` to smoke-test `turbos_min.img`, `turbos_uio.img`,
+and `turbos_full.img`.
+
+Run an interactive-shell smoke test against the full TurbOS image:
+
+```sh
+make turbos-full-smoke
+```
+
+This waits for the `TOS:` prompt, sends `mdir`, and verifies the module directory
+header is printed.
+
 The `FreeRTOS/Demo/*_CLANG` builds default to `/Volumes/Lagniappe/llvm/llvm-mc6809/llvm/build`.
 Override `LLVM6809_ROOT`, `LLVM6809_BINDIR`, or `LLVM6809_RTDIR` if your toolchain
 is installed somewhere else.

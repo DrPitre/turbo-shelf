@@ -51,6 +51,12 @@ Build the FreeRTOS Turbo9 demo explicitly with:
 make freertos-turbo9.done
 ```
 
+Smoke-test the FreeRTOS Turbo9 demo under Hyper9:
+
+```sh
+make freertos-smoke
+```
+
 Build the FreeRTOS CoCo CLANG demo explicitly with:
 
 ```sh

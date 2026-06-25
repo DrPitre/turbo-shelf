@@ -10,6 +10,7 @@ all: turbos.done hyper9.done freertos-turbo9.done
 TURBOS_IMAGE ?= turbos/ports/turbo9sim/turbos_dev.img
 TURBOS_SMOKE_IMAGE ?= turbos/ports/turbo9sim/turbos_smoke.img
 TURBOS_SMOKE_SECONDS ?= 1.0
+FREERTOS_SMOKE_SECONDS ?= 3.0
 
 ############################################################################
 
@@ -45,6 +46,9 @@ freertos-turbo9.done: freertos-turbo9.got hyper9.done lwtools.done
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/Turbo9_CLANG clean
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/Turbo9_CLANG freertos_baseline.img
 	date > $@
+
+freertos-smoke: freertos-turbo9.done hyper9.done
+	./scripts/turbos-smoke --seconds $(FREERTOS_SMOKE_SECONDS) --expect-output "FreeRTOS task heartbeat" ./bin/hyper9-cmd FreeRTOS_Turbo9/FreeRTOS/Demo/Turbo9_CLANG/freertos_baseline.img
 
 freertos-coco-clang.done: freertos-turbo9.got lwtools.done
 	make -C FreeRTOS_Turbo9/FreeRTOS/Demo/CoCo_CLANG clean

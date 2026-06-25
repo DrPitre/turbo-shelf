@@ -63,7 +63,7 @@ Run the TurbOS Turbo9 simulator image with Hyper9:
 make turbos-run
 ```
 
-By default this runs `turbos/ports/turbo9sim/turbos_full.img`. Override the image
+By default this runs `turbos/ports/turbo9sim/turbos_dev.img`. Override the image
 with `TURBOS_IMAGE=...`.
 
 Run a non-interactive smoke test that builds a dedicated TurbOS image, starts
@@ -73,13 +73,13 @@ Run a non-interactive smoke test that builds a dedicated TurbOS image, starts
 make turbos-smoke
 ```
 
-Use `make turbos-smoke-all` to smoke-test `turbos_min.img`, `turbos_uio.img`,
-and `turbos_full.img`.
+Use `make turbos-smoke-all` to smoke-test `turbos_lite.img`,
+`turbos_core.img`, and `turbos_dev.img`.
 
-Run an interactive-shell smoke test against the full TurbOS image:
+Run an interactive-shell smoke test against the dev TurbOS image:
 
 ```sh
-make turbos-full-smoke
+make turbos-dev-smoke
 ```
 
 This waits for the `TOS:` prompt, sends `mdir`, and verifies the module directory
